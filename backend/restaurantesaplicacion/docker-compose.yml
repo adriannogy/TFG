@@ -1,0 +1,35 @@
+version: '3.8' # Especifica la versión de la sintaxis de Docker Compose
+
+
+services:
+  # Tu servicio de base de datos (sin cambios)
+  db:
+    image: postgres:15
+    container_name: restaurantes_db
+    restart: always
+    environment:
+      POSTGRES_USER: mi_usuario
+      POSTGRES_PASSWORD: postgres1
+      POSTGRES_DB: restaurantes_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # NUEVO SERVICIO: Interfaz web pgAdmin
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_restaurantes
+    restart: always
+    environment:
+      # Credenciales para INICIAR SESIÓN en pgAdmin
+      PGADMIN_DEFAULT_EMAIL: admin@ejemplo.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      # Accederás a pgAdmin desde tu navegador en http://localhost:5050
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
